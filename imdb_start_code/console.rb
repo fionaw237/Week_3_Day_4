@@ -28,21 +28,24 @@ star2.save()
 movie1 = Movie.new(
   {
     'title' => 'The Fellowship of the Ring',
-    'genre' => 'Adventure'
+    'genre' => 'Adventure',
+    'budget' => 100
   }
 )
 
 movie2 = Movie.new(
   {
     'title' => 'The Two Towers',
-    'genre' => 'Adventure'
+    'genre' => 'Adventure',
+    'budget' => 120
   }
 )
 
 movie3 = Movie.new(
   {
     'title' => 'X-Men',
-    'genre' => 'Action'
+    'genre' => 'Action',
+    'budget' => 110
   }
 )
 
