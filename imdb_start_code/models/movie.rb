@@ -1,5 +1,7 @@
 require_relative("../db/sql_runner")
 
+require("pry-byebug")
+
 class Movie
 
   attr_reader :id
@@ -39,16 +41,28 @@ class Movie
     return stars.map {|star| Star.new(star)}
   end
 
-  def castings()
-    sql = "SELECT castings.* from castings WHERE movie_id = $1"
-    values = [@id]
-    castings = SqlRunner.run(sql, values)
-    return castings.map {|casting| Casting.new(casting)}
-  end
+#----- More 'Ruby-ish' way! --------
+
+  # def castings()
+  #   sql = "SELECT castings.* from castings WHERE movie_id = $1"
+  #   values = [@id]
+  #   castings = SqlRunner.run(sql, values)
+  #   return castings.map {|casting| Casting.new(casting)}
+  # end
+  #
+  # def remaining_budget()
+  #   actor_fees = castings().map{|casting| casting.fee().to_i() }
+  #   return @budget - actor_fees.sum()
+  # end
+
+#----- SQL way! ----------
 
   def remaining_budget()
-    actor_fees = castings().map{|casting| casting.fee().to_i() }
-    return @budget - actor_fees.sum()
+    sql = "SELECT SUM(castings.fee) FROM castings WHERE castings.movie_id = $1"
+    values = [@id]
+    result = SqlRunner.run(sql, values).first()
+    casting_fees = result['sum'].to_i()
+    return @budget - casting_fees
   end
 
   def self.delete_all()
@@ -57,3 +71,6 @@ class Movie
   end
 
 end
+
+#sql = "SELECT SUM(castings.fee) FROM castings WHERE id = $1"
+#sql = SELECT castings.fee FROM castings
